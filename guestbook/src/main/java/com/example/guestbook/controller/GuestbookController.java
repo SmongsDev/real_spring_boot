@@ -14,6 +14,6 @@ public class GuestbookController{
   public String list(){
     log.info("list.......");
 
-    return "/guestbook/ist";
+    return "/guestbook/list";
   }
 }
