@@ -11,9 +11,9 @@ import lombok.Data;
 @Data
 public class PageResultDTO<DTO, EN> {
   
-  private List<DTO> dtolist;
+  private List<DTO> dtoList;
 
-  public PageRequestDTO(Page<EN> result, Function<EN, DTO> fn){
-    dtolist = result.stream().map(fn).collect(Collectors.toList());
+  public PageResultDTO(Page<EN> result, Function<EN, DTO> fn){ 
+    dtoList = result.stream().map(fn).collect(Collectors.toList());
   }
 }
