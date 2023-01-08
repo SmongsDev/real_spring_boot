@@ -1,5 +1,6 @@
 package com.example.guestbook.service;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
@@ -38,9 +39,16 @@ public class GuestbookServiceImpl implements GuestbookService{
   }
 
   @Override
+  public GuestbookDTO read(Long gno){
+    Optional<Guestbook> result = repository.findById(gno);
+
+    return result.isPresent()? entityToDto(result.get()): null;
+  }
+
+  @Override
   public PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO){
     Pageable pageable = requestDTO.getPageable(Sort.by("gno").descending());
-
+    
     Page<Guestbook> result = repository.findAll(pageable);
 
     Function<Guestbook, GuestbookDTO> fn = (entity -> entityToDto(entity));

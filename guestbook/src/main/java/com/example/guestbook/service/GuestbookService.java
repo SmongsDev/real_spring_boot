@@ -8,6 +8,8 @@ import com.example.guestbook.entity.Guestbook;
 public interface GuestbookService {
   Long register(GuestbookDTO dto);
 
+  GuestbookDTO read(Long gno);
+
   PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO);
   
   default Guestbook dtoToEntity(GuestbookDTO dto){
@@ -26,6 +28,8 @@ public interface GuestbookService {
               .title(entity.getTitle())
               .content(entity.getContent())
               .writer(entity.getWriter())
+              .regDate(entity.getRegDate())
+              .modDate(entity.getModDate())
               .build();
     return dto;
   }
