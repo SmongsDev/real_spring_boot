@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
     <th:block th:fragment="content">
-      <h1 class="mt-4">GuestBook Register Page</h1>
+      <h1 class="mt-4">Board Register Page</h1>
 
-      <form th:action="@{/guestbook/register}" th:method="post">
+      <form th:action="@{/board/register}" th:method="post">
         <div class="form-group">
           <label>Title</label>
           <input type="text" class="form-control" name="title" placeholder="Enter Title">
@@ -14,8 +14,8 @@
           <textarea class="form-control" rows="5" name="content"></textarea>
         </div>
         <div class="form-group">
-          <label>Writer</label>
-          <input type="text" class="form-control" name="writer" placeholder="Enter Writer">
+          <label>Writer Email</label>
+          <input type="text" class="form-control" name="writerEmail" placeholder="Writer Email">
         </div>
         
         <button type="submit" class="btn btn-primary">Submit</button>
