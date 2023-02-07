@@ -36,6 +36,119 @@
     <a th:href="@{/board/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
       <button type="button" class="btn btn-info">List</button>
     </a>
+    <div>
+      <div class="mt-4">
+        <h5><span class="badge badge-info addReply">Add Reply</span></h5>
+        <h5><span class="badge badge-secondary replyCount">Reply Count [[${dto.replyCount}]]</span></h5>
+      </div>
+      <div class="list-group replyList">
+
+      </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div clsas="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <input class="form-control" type="text" name="replyText" placeholder="Reply Text...">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="text" name="replyer" placeholder="Replyer">
+              <input type="hidden" name="rno">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger replyRemove">Remove</button>
+            <button type="button" class="btn btn-warning replyModify">Modify</button>
+            <button type="button" class="btn btn-primary replySave">Save</button>
+            <button type="button" class="btn btn-outline-secondary replyClose" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </th:block>
 </th:block>
+<script th:inline="javascript">
+  $(document).ready(function(){
+    var bno = [[${dto.bno}]];
+
+    var listGroup = $(".replyList");
+
+    function formatTime(str){
+      var date = new Date(str);
+
+      return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+    }
+
+    function loadJSONData(){
+      $.getJSON('/replies/board/' + bno, function(arr){
+        console.log(arr);
+
+        var str = "";
+
+        $('.replyCount').html(" Reply Count " + arr.length);
+
+        $.each(arr, function(idx, reply){
+          console.log(reply);
+          str += '  <div class="card-body" data-rno="' + reply.rno + '"><b>' + reply.rno + '</b>';
+          str += '  <h5 class="card-title">' + reply.text + '</h5>';
+          str += '  <h6 class="card-subtitle mb-2 text-muted">' + reply.replyer + '</h6>';
+          str += '  <p class="card-text">' + formatTime(reply.regDate) + '</p>';
+          str += '  </div>';
+        })
+        listGroup.html(str);
+      })
+    }
+
+    $(".replyCount").click(function(){
+      loadJSONData();
+    })
+  });
+
+  var modal = $('.modal');
+
+  $(".addReply").click(function(){
+    modal.modal('show');
+
+    $('input[name="replyText"]').val('');
+    $('input[name="replyer"]').val('');
+    
+    $(".modal-footer .btn").hide();
+    $(".replySave, .replyClose").show();
+  });
+
+  $(".replySave").click(function(){
+    var reply = {
+      bno: bno,
+      text: $('input[name="replyText"]').val(),
+      replyer: $('input[name="replyer"]').val()
+    }
+    console.log(reply);
+
+    $.ajax({
+      url: '/replies',
+      method: 'post',
+      data: JSON.stringify(reply),
+      contentType: 'application/json; charset=uft-8',
+      dataType: 'json',
+      success: function(data){
+        console.log(data);
+
+        var newRno = parseInt(data);
+
+        alert(newRno + '번 댓글이 등록되었습니다.');
+        modal.modal('hide');
+        loadJSONData();
+      }
+    })
+  });
+</script>
 </html>

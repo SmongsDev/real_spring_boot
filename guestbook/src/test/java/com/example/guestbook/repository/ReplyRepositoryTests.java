@@ -1,5 +1,6 @@
 package com.example.guestbook.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -40,5 +41,12 @@ public class ReplyRepositoryTests {
 
     System.out.println(reply);
     System.out.println(reply.getBoard());
+  }
+
+  @Test
+  public void testListByBoard(){
+    List<Reply> replyList = replyRepository.getRepliesByBoardOrderByRno(Board.builder().bno(97L).build());
+    
+    replyList.forEach(reply -> System.out.println(reply));
   }
 }

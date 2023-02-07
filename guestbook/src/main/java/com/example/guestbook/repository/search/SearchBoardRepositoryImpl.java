@@ -1,7 +1,6 @@
 package com.example.guestbook.repository.search;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -10,9 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import com.example.guestbook.dto.BoardDTO;
-import com.example.guestbook.dto.PageRequestDTO;
-import com.example.guestbook.dto.PageResultDTO;
 import com.example.guestbook.entity.Board;
 import com.example.guestbook.entity.QBoard;
 import com.example.guestbook.entity.QMember;
