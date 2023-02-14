@@ -12,5 +12,15 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      location: C:\\upload
+      max-request-size: 30MB
+      max-file-size: 10MB
   thymeleaf:
     cache: false
+com:
+  example:
+    upload:
+      path: C:\\upload
