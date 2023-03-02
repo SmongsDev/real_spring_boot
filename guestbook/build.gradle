@@ -38,6 +38,9 @@ dependencies {
 	}
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	// compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.12'
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.14'
+	// implementation "net.coobird:thumbnailator:[0.4, 0.5)"
 }
 
 tasks.named('test') {

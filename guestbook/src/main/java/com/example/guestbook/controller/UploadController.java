@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import net.coobird.thumbnailator.Thumbnailator;
 
 import com.example.guestbook.dto.UploadResultDTO;
 
@@ -34,35 +35,42 @@ public class UploadController {
   private String uploadPath;
   
   @PostMapping("/uploadAjax")
-  public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles){
+  public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles) {
+
     List<UploadResultDTO> resultDTOList = new ArrayList<>();
+    for(MultipartFile uploadFile : uploadFiles) {
 
-    for(MultipartFile uploadFile: uploadFiles){
-
-      if(uploadFile.getContentType().startsWith("image") == false){
-        log.warn("this file is not image type");
+      //파일 확장자 체크
+      if(uploadFile.getContentType().startsWith("image") == false) {
+        log.warn("this is not image type");
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
       }
 
       String originalName = uploadFile.getOriginalFilename();
       String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
 
-      log.info("fileName: " + fileName);
+      log.info("fileName " +fileName);
 
+      //폴더 구분
       String folderPath = makeFolder();
-
       String uuid = UUID.randomUUID().toString();
 
+      //파일명 구분
       String saveName = uploadPath + File.separator + folderPath + File.separator + uuid + "_" + fileName;
-
       Path savePath = Paths.get(saveName);
-
-      try{
+      try {
         uploadFile.transferTo(savePath);
-      } catch(IOException e){
+
+        String thumbnailSaveName = uploadPath + File.separator + folderPath + File.pathSeparator + "s_" + uuid + "_" + fileName;
+
+        File thumbnailFile = new File(thumbnailSaveName);
+        Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+        resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
+      } catch (IOException e) {
         e.printStackTrace();
       }
     }
+
     return new ResponseEntity<>(resultDTOList, HttpStatus.OK);
   }
 
@@ -73,9 +81,10 @@ public class UploadController {
 
     File uploadPathFolder = new File(uploadPath, folderPath);
 
-    if(uploadPathFolder.exists() == false){
-      uploadPathFolder.mkdir();
+    if(uploadPathFolder.exists() == false) {
+      uploadPathFolder.mkdirs();
     }
+
     return folderPath;
   }
 
