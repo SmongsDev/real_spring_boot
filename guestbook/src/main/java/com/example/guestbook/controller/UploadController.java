@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -61,8 +62,7 @@ public class UploadController {
       try {
         uploadFile.transferTo(savePath);
 
-        String thumbnailSaveName = uploadPath + File.separator + folderPath + File.pathSeparator + "s_" + uuid + "_" + fileName;
-
+        String thumbnailSaveName = uploadPath + File.separator + folderPath + File.separator + "s_" + uuid + "_" + fileName;
         File thumbnailFile = new File(thumbnailSaveName);
         Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
         resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
@@ -111,5 +111,24 @@ public class UploadController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return result;
+  }
+
+  @PostMapping("/removeFile")
+  public ResponseEntity<Boolean> removeFile(String fileName){
+    String srcFileName = null;
+    try{
+      srcFileName = URLDecoder.decode(fileName, "UTF-8");
+      File file = new File(uploadPath + File.separator + srcFileName);
+      boolean result = file.delete();
+
+      File thumbnail = new File(file.getParent(), "s_" + file.getName());
+
+      result = thumbnail.delete();
+
+      return new ResponseEntity<>(result, HttpStatus.OK);
+    }catch (UnsupportedEncodingException e){
+      e.printStackTrace();
+      return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

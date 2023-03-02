@@ -23,4 +23,14 @@ public class UploadResultDTO implements Serializable{
     }
     return "";
   }
+
+  // 이렇게 만들어 놓으면 json에 ThumbnailURL로 변수 생김
+  public String getThumbnailURL(){
+    try{
+      return URLEncoder.encode(folderPath + "/s_" + uuid + "_" + fileName, "UTF-8");
+    } catch (UnsupportedEncodingException e){
+      e.printStackTrace();
+    }
+    return "";
+  }
 }

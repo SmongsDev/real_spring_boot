@@ -24,4 +24,4 @@ com:
   example:
     upload:
       # path: C:\\Users\\CKIRUser\\Desktop\\upload
-      path: C:\\upload
+      path: upload
