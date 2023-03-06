@@ -101,6 +101,8 @@
             dataType: 'json',
             success: function(result){
               console.log(result);
+
+              showResult(result);
             },
             error: function(jqXHR, textStatus, errorThrown){
               console.log(textStatus);
@@ -118,7 +120,7 @@
             str + " <div>";
             str += "<button type='button' data-file=\'" + obj.imageURL + "\' ";
             str += "class='btn-warning btn-sm'>X</button><br>";
-            str += "<img src='/display?fileName=" + obj.thumbanailURL + "'>";
+            str += "<img src='/display?fileName=" + obj.thumbnailURL + "'>";
             str += "</div>";
             str + "</li>";
           });
@@ -158,7 +160,7 @@
 
           $(".box").html(str);
 
-          // $("form").submit();
+          $("form").submit();
         });
       });
     </script>
