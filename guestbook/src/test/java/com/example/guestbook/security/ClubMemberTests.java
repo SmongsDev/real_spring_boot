@@ -4,11 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.guestbook.entity.ClubMember;
 import com.example.guestbook.entity.ClubMemberRole;
 import com.example.guestbook.repository.ClubMemberRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -41,5 +44,15 @@ public class ClubMemberTests{
 
       repository.save(clubMember);
     });
+  }
+
+  @Transactional
+  @Test
+  public void testRead(){
+    Optional<ClubMember> result = repository.findByEmail("user95@example.com", false);
+
+    ClubMember clubMember = result.get();
+
+    System.out.println(clubMember);
   }
 }
